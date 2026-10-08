@@ -1,0 +1,124 @@
+/* Хороший Цветочный — общие стили */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#333;background:#fdfbf7}
+
+/* Контейнер */
+.container{max-width:1140px;margin:0 auto;padding:0 20px}
+
+/* Шапка */
+header{background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:100}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+.logo{font-size:1.4rem;font-weight:700;color:#d4a373;text-decoration:none;white-space:nowrap}
+.logo span{font-size:1.5rem}
+.nav{display:flex;gap:28px;align-items:center}
+.nav a{color:#555;text-decoration:none;font-size:0.95rem;transition:color .2s}
+.nav a:hover{color:#d4a373}
+.nav a.active{color:#d4a373;font-weight:600}
+.header-cta{display:flex;align-items:center;gap:16px}
+.header-phone{font-size:0.85rem;color:#999}
+.btn-order-top{background:#d4a373;color:#fff;padding:8px 18px;border-radius:6px;text-decoration:none;font-size:0.9rem;font-weight:600;white-space:nowrap}
+.burger{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#d4a373}
+
+/* Hero */
+.hero{background:linear-gradient(180deg,#fdfbf7 0%,#f5efe6 100%);padding:80px 0 60px;text-align:center}
+.hero h1{font-size:2.6rem;line-height:1.2;margin-bottom:18px;color:#3d2b1f}
+.hero p.subtitle{font-size:1.15rem;color:#777;max-width:600px;margin:0 auto 36px}
+.hero-badges{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-bottom:36px}
+.badge{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:0.85rem;color:#666}
+.badge-icon{font-size:1.8rem}
+.hero-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:14px 32px;border-radius:50px;text-decoration:none;font-weight:600;font-size:1rem;cursor:pointer;border:none;transition:transform .15s,box-shadow .15s}
+.btn-primary{background:#d4a373;color:#fff}
+.btn-primary:hover{transform:scale(1.03);box-shadow:0 6px 16px rgba(212,163,115,0.35)}
+.btn-outline{background:transparent;color:#d4a373;border:2px solid #d4a373}
+.btn-outline:hover{background:#d4a373;color:#fff}
+
+/* Секции */
+section{padding:60px 0}
+.section-title{font-size:1.8rem;text-align:center;margin-bottom:40px;color:#3d2b1f}
+
+/* Каталог-сетка */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:28px}
+.card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,0.07);transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.12)}
+.card img{width:100%;height:300px;object-fit:cover;display:block}
+.card-body{padding:20px;flex:1;display:flex;flex-direction:column}
+.card-body h3{font-size:1.1rem;margin-bottom:8px;color:#3d2b1f}
+.card-body .desc{color:#888;font-size:0.9rem;margin-bottom:14px;flex:1}
+.card-body .price{font-size:1.2rem;font-weight:700;color:#d4a373;margin-bottom:14px}
+.card-body .btn{width:100%;text-align:center}
+
+/* Преимущества */
+.features{background:#fff}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.feature{text-align:center;padding:24px 16px;background:#fdfbf7;border-radius:12px}
+.feature .icon{font-size:2.2rem;display:block;margin-bottom:12px}
+.feature h3{font-size:1rem;margin-bottom:6px;color:#3d2b1f}
+.feature p{font-size:0.88rem;color:#888}
+
+/* Доставка */
+.delivery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.delivery-item{text-align:center;padding:20px}
+.delivery-item .icon{font-size:2rem;display:block;margin-bottom:10px}
+.delivery-item h4{font-size:0.95rem;margin-bottom:6px;color:#3d2b1f}
+.delivery-item p{font-size:0.85rem;color:#888}
+
+/* Отзывы */
+.reviews{background:#f5efe6}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.review{background:#fff;padding:28px;border-radius:12px}
+.review-stars{color:#d4a373;font-size:1.1rem;margin-bottom:12px;letter-spacing:2px}
+.review p{color:#555;font-size:0.92rem;margin-bottom:16px;font-style:italic}
+.review-author{display:flex;align-items:center;gap:10px}
+.review-avatar{width:40px;height:40px;border-radius:50%;background:#d4a373;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem}
+.review-name{font-weight:600;font-size:0.9rem}
+.review-date{font-size:0.8rem;color:#aaa}
+
+/* CTA блок */
+.cta-block{text-align:center;background:linear-gradient(135deg,#d4a373 0%,#c29365 100%);color:#fff;padding:70px 20px}
+.cta-block h2{font-size:1.8rem;margin-bottom:14px}
+.cta-block p{font-size:1.05rem;margin-bottom:30px;opacity:0.95}
+.cta-block .btn{background:#fff;color:#d4a373}
+.cta-block .btn:hover{transform:scale(1.03);box-shadow:0 6px 16px rgba(0,0,0,0.2)}
+
+/* Футер */
+footer{background:#3d2b1f;color:#ddd;padding:50px 0 30px}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:30px;margin-bottom:30px}
+.footer-col h4{color:#fff;font-size:1rem;margin-bottom:12px}
+.footer-col a{display:block;color:#bbb;text-decoration:none;font-size:0.88rem;margin-bottom:6px;transition:color .2s}
+.footer-col a:hover{color:#d4a373}
+.footer-col p{font-size:0.88rem;color:#bbb;line-height:1.5}
+.footer-bottom{text-align:center;border-top:1px solid #555;padding-top:20px;font-size:0.82rem;color:#999}
+
+/* Корзина */
+.cart-section{background:#fff;padding:40px 0}
+.cart-section h2{font-size:1.4rem;margin-bottom:20px;color:#3d2b1f}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #eee}
+.cart-item span:first-child{font-weight:500}
+.cart-remove{background:none;border:none;color:#e74c3c;cursor:pointer;font-size:1.3rem;padding:0 6px}
+.cart-empty{color:#aaa;font-style:italic;padding:20px 0}
+.cart-total{text-align:right;font-size:1.15rem;font-weight:700;color:#3d2b1f;padding:16px 0;margin-bottom:20px}
+
+/* Форма заказа */
+.order-form{max-width:520px}
+.order-form h3{font-size:1.2rem;margin-bottom:16px;color:#3d2b1f}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;margin-bottom:4px;font-size:0.88rem;font-weight:600;color:#555}
+.form-group input,.form-group textarea{width:100%;padding:12px 14px;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;font-family:inherit}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:#d4a373;box-shadow:0 0 0 2px rgba(212,163,115,0.15)}
+.form-submit{background:#d4a373;color:#fff;border:none;padding:14px 32px;border-radius:50px;font-size:1rem;font-weight:600;cursor:pointer;width:100%;transition:transform .15s,box-shadow .15s}
+.form-submit:hover{transform:scale(1.02);box-shadow:0 6px 16px rgba(212,163,115,0.35)}
+.form-note{font-size:0.8rem;color:#aaa;margin-top:8px}
+
+/* Адаптив */
+@media(max-width:768px){
+  .nav{display:none}
+  .burger{display:block}
+  .nav.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:#fff;padding:20px;gap:16px;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+  .hero h1{font-size:1.8rem}
+  .hero p.subtitle{font-size:1rem}
+  .hero-badges{gap:12px}
+  .grid{grid-template-columns:1fr}
+  .reviews-grid{grid-template-columns:1fr}
+  .header-phone{display:none}
+}

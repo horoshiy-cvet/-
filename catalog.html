@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог букетов — Хороший Цветочный</title>
+    <meta name="description" content="Каталог букетов с доставкой по Москве. Свежие цветы, авторская флористика, доставка за 2 часа.">
+    <style>
+
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #2c2c2c;
+            line-height: 1.6;
+            background: #faf8f5;
+        }
+        img { max-width: 100%; display: block; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* ===== COLORS ===== */
+        :root {
+            --pink: #d4677e;
+            --pink-dark: #b84a63;
+            --pink-light: #f5dde3;
+            --green: #5a7a5a;
+            --cream: #faf8f5;
+            --dark: #2c2c2c;
+            --gray: #6b6b6b;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid #eee;
+            transition: box-shadow 0.3s;
+        }
+        header.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--pink);
+        }
+        .logo span { color: var(--green); }
+        .logo-icon { font-size: 28px; }
+        nav ul {
+            display: flex;
+            gap: 28px;
+        }
+        nav a {
+            font-size: 15px;
+            color: var(--dark);
+            transition: color 0.2s;
+            position: relative;
+        }
+        nav a:hover { color: var(--pink); }
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 2px;
+            background: var(--pink);
+            transition: width 0.3s;
+        }
+        nav a:hover::after { width: 100%; }
+        .header-contact {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .header-phone {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        .btn-vk {
+            background: #0077ff;
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn-vk:hover { background: #0066dd; }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .burger span {
+            width: 26px; height: 3px;
+            background: var(--dark);
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+        .burger.active span:nth-child(1) { transform: rotate(45deg) translate(6px,6px); }
+        .burger.active span:nth-child(2) { opacity: 0; }
+        .burger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px,-6px); }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, #f5dde3 0%, #faf8f5 50%, #e8f0e8 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .hero-content h1 {
+            font-size: 42px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        .hero-content h1 em {
+            color: var(--pink);
+            font-style: normal;
+        }
+        .hero-content p {
+            font-size: 18px;
+            color: var(--gray);
+            margin-bottom: 30px;
+            max-width: 480px;
+        }
+        .hero-features {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 36px;
+            flex-wrap: wrap;
+        }
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        .hero-feature-icon {
+            width: 36px; height: 36px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: var(--pink);
+            color: #fff !important;
+            padding: 14px 36px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background: var(--pink-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212,103,126,0.35);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--pink) !important;
+            padding: 14px 36px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid var(--pink);
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn-secondary:hover {
+            background: var(--pink-light);
+        }
+        .hero-image {
+            position: relative;
+        }
+        .hero-image-placeholder {
+            width: 100%;
+            aspect-ratio: 4/5;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #f5dde3, #e8f0e8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        .hero-badge {
+            position: absolute;
+            bottom: 30px; left: -20px;
+            background: #fff;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .hero-badge-icon {
+            width: 44px; height: 44px;
+            background: var(--pink-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        .hero-badge-text strong {
+            display: block;
+            font-size: 16px;
+            color: var(--dark);
+        }
+        .hero-badge-text span {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .section-title h2 {
+            font-size: 34px;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+        .section-title p {
+            font-size: 17px;
+            color: var(--gray);
+        }
+
+        /* ===== CATALOG ===== */
+        .catalog {
+            padding: 80px 0;
+        }
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            transition: all 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: linear-gradient(135deg, #f5dde3, #e8f0e8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+        }
+        .product-info {
+            padding: 22px;
+        }
+        .product-tag {
+            display: inline-block;
+            background: var(--pink-light);
+            color: var(--pink-dark);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--dark);
+        }
+        .product-desc {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+        .product-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .product-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--pink);
+        }
+        .product-btn {
+            background: var(--pink);
+            color: #fff !important;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .product-btn:hover { background: var(--pink-dark); }
+
+        /* ===== ADVANTAGES ===== */
+        .advantages {
+            padding: 80px 0;
+            background: #fff;
+        }
+        .adv-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        .adv-card {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .adv-icon {
+            width: 64px; height: 64px;
+            margin: 0 auto 18px;
+            background: var(--pink-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+        .adv-card h3 {
+            font-size: 17px;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        .adv-card p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* ===== DELIVERY ===== */
+        .delivery {
+            padding: 80px 0;
+        }
+        .delivery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        .delivery-info h2 {
+            font-size: 30px;
+            margin-bottom: 24px;
+            color: var(--dark);
+        }
+        .delivery-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .delivery-item-icon {
+            min-width: 48px; height: 48px;
+            background: var(--pink-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        .delivery-item h4 {
+            font-size: 17px;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+        .delivery-item p {
+            font-size: 15px;
+            color: var(--gray);
+        }
+        .delivery-visual {
+            background: linear-gradient(135deg, #f5dde3, #e8f0e8);
+            border-radius: 24px;
+            padding: 50px;
+            text-align: center;
+            font-size: 100px;
+        }
+
+        /* ===== REVIEWS ===== */
+        .reviews {
+            padding: 80px 0;
+            background: #fff;
+        }
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .review-card {
+            padding: 30px;
+            border: 1px solid #eee;
+            border-radius: 16px;
+        }
+        .review-stars {
+            color: #f5a623;
+            font-size: 18px;
+            margin-bottom: 14px;
+        }
+        .review-text {
+            font-size: 15px;
+            color: var(--dark);
+            margin-bottom: 18px;
+            font-style: italic;
+        }
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .review-avatar {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: var(--pink-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--pink);
+        }
+        .review-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        .review-date {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        /* ===== CTA ===== */
+        .cta {
+            padding: 60px 0;
+        }
+        .cta-box {
+            background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+            border-radius: 24px;
+            padding: 60px 40px;
+            text-align: center;
+            color: #fff;
+        }
+        .cta-box h2 {
+            font-size: 30px;
+            margin-bottom: 14px;
+        }
+        .cta-box p {
+            font-size: 17px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        .cta-box .btn-primary {
+            background: #fff;
+            color: var(--pink-dark) !important;
+        }
+        .cta-box .btn-primary:hover {
+            background: #fff;
+            opacity: 0.9;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--dark);
+            color: #ccc;
+            padding: 50px 0 30px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-brand h3 {
+            color: var(--pink);
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+        .footer-brand p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #999;
+        }
+        .footer-col h4 {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 14px;
+        }
+        .footer-col a {
+            display: block;
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 8px;
+            transition: color 0.2s;
+        }
+        .footer-col a:hover { color: var(--pink); }
+        .footer-bottom {
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #777;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            nav ul, .header-phone { display: none; }
+            .burger { display: flex; }
+            .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+            .hero-content h1 { font-size: 30px; }
+            .catalog-grid { grid-template-columns: repeat(2, 1fr); }
+            .adv-grid { grid-template-columns: repeat(2, 1fr); }
+            .delivery-grid { grid-template-columns: 1fr; }
+            .reviews-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 600px) {
+            .hero { padding: 100px 0 60px; }
+            .hero-content h1 { font-size: 26px; }
+            .catalog-grid { grid-template-columns: 1fr; }
+            .adv-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .section-title h2 { font-size: 26px; }
+            .cta-box { padding: 40px 24px; }
+            .cta-box h2 { font-size: 24px; }
+            .hero-badge { left: 0; bottom: 10px; padding: 12px 16px; }
+        }
+    
+        /* ===== PRODUCT IMAGE WITH REAL PHOTO ===== */
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .product-image {
+            aspect-ratio: 1/1;
+            overflow: hidden;
+        }
+
+        /* ===== CART & FORM STYLES (for catalog page) ===== */
+        .cart-section {
+            padding: 60px 0;
+            background: #fff;
+        }
+        .cart-section h2 {
+            font-size: 28px;
+            margin-bottom: 24px;
+            color: var(--dark);
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-item-name { font-weight: 500; }
+        .cart-item-price { color: var(--pink); font-weight: 600; }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .remove-btn:hover { background: #fce4e4; }
+        .cart-total {
+            text-align: right;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 20px 0;
+            padding: 16px;
+            background: var(--cream);
+            border-radius: 12px;
+        }
+        .order-form {
+            max-width: 500px;
+            margin-top: 30px;
+        }
+        .order-form h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--pink);
+            outline: none;
+        }
+        .form-submit {
+            background: var(--pink);
+            color: #fff !important;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        .form-submit:hover {
+            background: var(--pink-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212,103,126,0.35);
+        }
+        .form-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .cart-empty {
+            color: var(--gray);
+            font-size: 16px;
+            padding: 20px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="header">
+    <div class="container header-inner">
+        <a href="index.html" class="logo">
+            <span class="logo-icon">🌸</span>
+            Хороший <span>Цветочный</span>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="catalog.html">Каталог</a></li>
+                <li><a href="index.html#advantages">Преимущества</a></li>
+                <li><a href="index.html#delivery">Доставка</a></li>
+                <li><a href="index.html#reviews">Отзывы</a></li>
+                <li><a href="index.html#contacts">Контакты</a></li>
+            </ul>
+        </nav>
+        <div class="header-contact">
+            <a href="tel:+70000000000" class="header-phone">24/7</a>
+            <a href="https://vk.ru/khoroshiy_svetochniy" target="_blank" class="btn-vk">Заказать</a>
+            <button class="burger" id="burger">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" style="padding: 100px 0 40px;">
+    <div class="container">
+        <div class="section-title" style="margin-bottom: 20px;">
+            <h2>Каталог букетов</h2>
+            <p>Свежие цветы, стильная упаковка и быстрая доставка по Москве</p>
+        </div>
+    </div>
+</section>
+
+<!-- CATALOG -->
+<section class="catalog" style="padding-top: 20px;">
+    <div class="container">
+        <div class="catalog-grid">
+            <div class="product-card">
+                <div class="product-image"><img src="img/bouquet1.jpg" alt="Букет красных роз и альстромерии" loading="lazy"></div>
+                <div class="product-info">
+                    <div class="product-tag">Хит продаж</div>
+                    <div class="product-name">Букет красных роз и альстромерии</div>
+                    <div class="product-desc">Яркий букет с акцентом на красные розы и нежную альстромерию.</div>
+                    <div class="product-bottom">
+                        <div class="product-price">3 150 ₽</div>
+                        <button class="product-btn add-to-cart" data-name="Букет красных роз и альстромерии" data-price="3150">В корзину</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image"><img src="img/bouquet2.jpg" alt="Композиция в сумочке «Сочный акцент»" loading="lazy"></div>
+                <div class="product-info">
+                    <div class="product-tag">Новинка</div>
+                    <div class="product-name">Композиция в сумочке «Сочный акцент»</div>
+                    <div class="product-desc">Стильная композиция в фирменной сумочке — подарок, который удивляет.</div>
+                    <div class="product-bottom">
+                        <div class="product-price">1 990 ₽</div>
+                        <button class="product-btn add-to-cart" data-name="Композиция в сумочке «Сочный акцент»" data-price="1990">В корзину</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image"><img src="img/bouquet3.jpg" alt="Монобукет из кустовых хризантем" loading="lazy"></div>
+                <div class="product-info">
+                    <div class="product-tag">Популярное</div>
+                    <div class="product-name">Монобукет из кустовых хризантем</div>
+                    <div class="product-desc">Пышные кустовые хризантемы — долго стоят и радуют глаз.</div>
+                    <div class="product-bottom">
+                        <div class="product-price">от 2 850 ₽</div>
+                        <button class="product-btn add-to-cart" data-name="Монобукет из кустовых хризантем" data-price="2850">В корзину</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image"><img src="img/bouquet4.jpg" alt="Букет ярких кустовых роз" loading="lazy"></div>
+                <div class="product-info">
+                    <div class="product-tag">Хит</div>
+                    <div class="product-name">Букет ярких кустовых роз</div>
+                    <div class="product-desc">Яркие кустовые розы — сочные цвета и пышная форма.</div>
+                    <div class="product-bottom">
+                        <div class="product-price">от 2 250 ₽</div>
+                        <button class="product-btn add-to-cart" data-name="Букет ярких кустовых роз" data-price="2250">В корзину</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image"><img src="img/bouquet5.jpg" alt="Букет из розовых роз и хризантем" loading="lazy"></div>
+                <div class="product-info">
+                    <div class="product-tag">Нежный</div>
+                    <div class="product-name">Букет из розовых роз и хризантем</div>
+                    <div class="product-desc">Нежное сочетание розовых роз и белых хризантем.</div>
+                    <div class="product-bottom">
+                        <div class="product-price">3 450 ₽</div>
+                        <button class="product-btn add-to-cart" data-name="Букет из розовых роз и хризантем" data-price="3450">В корзину</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image"><img src="img/bouquet6.jpg" alt="Яркий букет из гербер и роз" loading="lazy"></div>
+                <div class="product-info">
+                    <div class="product-tag">Яркий</div>
+                    <div class="product-name">Яркий букет из гербер и роз</div>
+                    <div class="product-desc">Сочные герберы и кустовые розы — букет для хорошего настроения.</div>
+                    <div class="product-bottom">
+                        <div class="product-price">3 800 ₽</div>
+                        <button class="product-btn add-to-cart" data-name="Яркий букет из гербер и роз" data-price="3800">В корзину</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image"><img src="img/bouquet7.jpg" alt="Пастельный букет из гербер и хризантем" loading="lazy"></div>
+                <div class="product-info">
+                    <div class="product-tag">Пастельный</div>
+                    <div class="product-name">Пастельный букет из гербер и хризантем</div>
+                    <div class="product-desc">Мягкие пастельные оттенки для самых трогательных моментов.</div>
+                    <div class="product-bottom">
+                        <div class="product-price">2 990 ₽</div>
+                        <button class="product-btn add-to-cart" data-name="Пастельный букет из гербер и хризантем" data-price="2990">В корзину</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image"><img src="img/bouquet8.jpg" alt="Сборный букет в яркой упаковке" loading="lazy"></div>
+                <div class="product-info">
+                    <div class="product-tag">Сочный</div>
+                    <div class="product-name">Сборный букет в яркой упаковке</div>
+                    <div class="product-desc">Сочный микс из сезонных цветов в стильной упаковке.</div>
+                    <div class="product-bottom">
+                        <div class="product-price">от 2 500 ₽</div>
+                        <button class="product-btn add-to-cart" data-name="Сборный букет в яркой упаковке" data-price="2500">В корзину</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image"><img src="img/bouquet9.jpg" alt="Белые хризантемы с эвкалиптом" loading="lazy"></div>
+                <div class="product-info">
+                    <div class="product-tag">Лаконичный</div>
+                    <div class="product-name">Белые хризантемы с эвкалиптом</div>
+                    <div class="product-desc">Крупные белые хризантемы и веточки эвкалипта — лаконично и стильно.</div>
+                    <div class="product-bottom">
+                        <div class="product-price">2 750 ₽</div>
+                        <button class="product-btn add-to-cart" data-name="Белые хризантемы с эвкалиптом" data-price="2750">В корзину</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CART & ORDER FORM -->
+<section class="cart-section">
+    <div class="container">
+        <h2>Ваша корзина</h2>
+        <div id="cart-items"><p class="cart-empty">Корзина пуста. Добавьте букеты из каталога выше.</p></div>
+        <div id="cart-total"></div>
+        
+        <form id="order-form" class="order-form" style="display:none;">
+            <h3>Оформить заказ</h3>
+            <div class="form-group">
+                <label for="name">Ваше имя</label>
+                <input type="text" id="name" name="name" placeholder="Анна" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Телефон</label>
+                <input type="tel" id="phone" name="phone" placeholder="+7 (999) 000-00-00" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Адрес доставки</label>
+                <input type="text" id="address" name="address" placeholder="ул. Цветочная, д. 1, кв. 10" required>
+            </div>
+            <div class="form-group">
+                <label for="comment">Комментарий к заказу</label>
+                <textarea id="comment" name="comment" rows="3" placeholder="Пожелания к букету, время доставки..."></textarea>
+            </div>
+            <button type="submit" class="form-submit" id="submit-btn">Отправить заказ</button>
+        </form>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contacts">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>🌸 Хороший Цветочный</h3>
+                <p>Авторская флористика с доставкой по Москве и области. Свежие цветы, забота о каждом букете и открытка от руки — потому что детали важны.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Навигация</h4>
+                <a href="catalog.html">Каталог</a>
+                <a href="index.html#advantages">Преимущества</a>
+                <a href="index.html#delivery">Доставка</a>
+                <a href="index.html#reviews">Отзывы</a>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <a href="https://vk.ru/khoroshiy_svetochniy" target="_blank">ВКонтакте</a>
+                <a href="tel:+70000000000">Телефон</a>
+                <p style="font-size:14px;color:#999;margin-top:8px;">ул. Генерала Белова, 19к4<br>м. Домодедовская, Москва</p>
+            </div>
+            <div class="footer-col">
+                <h4>Режим работы</h4>
+                <p style="font-size:14px;color:#999;line-height:1.7;">Заказы — 24/7<br>Доставка — 9:00–22:00<br>Самовывоз — 10:00–20:00</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 Хороший Цветочный. Все права защищены. Сделано с любовью к цветам.
+        </div>
+    </div>
+</footer>
+
+<script>
+    // === НАСТРОЙКИ TELEGRAM ===
+    const TELEGRAM_TOKEN = 'ВАШ_ТОКЕН';
+    const TELEGRAM_CHAT_ID = 'ВАШ_CHAT_ID';
+    // ==========================
+
+    const cart = [];
+    const cartItemsEl = document.getElementById('cart-items');
+    const cartTotalEl = document.getElementById('cart-total');
+    const orderForm = document.getElementById('order-form');
+
+    // Добавление в корзину
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const name = btn.getAttribute('data-name');
+            const price = parseInt(btn.getAttribute('data-price'));
+            cart.push({ name, price });
+            renderCart();
+            // Меняем текст кнопки на 1 секунду
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Добавлено!';
+            btn.style.background = '#5a7a5a';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 1000);
+        });
+    });
+
+    function renderCart() {
+        if (cart.length === 0) {
+            cartItemsEl.innerHTML = '<p class="cart-empty">Корзина пуста. Добавьте букеты из каталога выше.</p>';
+            cartTotalEl.innerHTML = '';
+            orderForm.style.display = 'none';
+            return;
+        }
+
+        orderForm.style.display = 'block';
+
+        cartItemsEl.innerHTML = cart.map((item, index) => `
+            <div class="cart-item">
+                <span class="cart-item-name">${index + 1}. ${item.name}</span>
+                <span class="cart-item-price">${item.price.toLocaleString('ru-RU')} ₽</span>
+                <button class="remove-btn" data-index="${index}">×</button>
+            </div>
+        `).join('');
+
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        cartTotalEl.innerHTML = `<div class="cart-total">Итого: ${total.toLocaleString('ru-RU')} ₽</div>`;
+
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const index = parseInt(btn.getAttribute('data-index'));
+                cart.splice(index, 1);
+                renderCart();
+            });
+        });
+    }
+
+    // Отправка заказа в Telegram
+    document.getElementById('order-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('address').value;
+        const comment = document.getElementById('comment').value;
+
+        if (cart.length === 0) {
+            alert('Сначала добавьте товары в корзину!');
+            return;
+        }
+
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Отправляем...';
+
+        const total = cart.reduce((sum, i) => sum + i.price, 0);
+        const itemsList = cart.map((i, idx) => `${idx + 1}. ${i.name} — ${i.price.toLocaleString('ru-RU')} ₽`).join('\n');
+
+        const message = `📦 <b>Новый заказ!</b>\n\n👤 Клиент: ${name}\n📱 Телефон: ${phone}\n📍 Адрес: ${address}\n\n💐 <b>Состав заказа:</b>\n${itemsList}\n\n💰 <b>Итого: ${total.toLocaleString('ru-RU')} ₽</b>\n\n📝 Комментарий: ${comment || '—'}`;
+
+        try {
+            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+            const params = new URLSearchParams();
+            params.append('chat_id', TELEGRAM_CHAT_ID);
+            params.append('text', message);
+            params.append('parse_mode', 'HTML');
+
+            const response = await fetch(url, {
+                method: 'POST',
+                body: params
+            });
+            const data = await response.json();
+
+            if (data.ok) {
+                alert('Спасибо! Заказ отправлен. Мы свяжемся с вами для подтверждения.');
+                cart.length = 0;
+                renderCart();
+                document.getElementById('order-form').reset();
+            } else {
+                alert('Ошибка: ' + (data.description || 'не удалось отправить'));
+            }
+        } catch (error) {
+            alert('Ошибка отправки. Проверьте подключение к интернету.');
+            console.error(error);
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Отправить заказ';
+    });
+
+    // Header & Burger (same as index.html)
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    const burger = document.getElementById('burger');
+    const nav = document.querySelector('nav ul');
+    burger.addEventListener('click', () => {
+        burger.classList.toggle('active');
+        if (nav.style.display === 'flex') {
+            nav.style.display = '';
+        } else {
+            nav.style.display = 'flex';
+            nav.style.flexDirection = 'column';
+            nav.style.position = 'absolute';
+            nav.style.top = '60px';
+            nav.style.right = '20px';
+            nav.style.background = '#fff';
+            nav.style.padding = '20px';
+            nav.style.borderRadius = '12px';
+            nav.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1)';
+        }
+    });
+    nav.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            burger.classList.remove('active');
+            nav.style.display = '';
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -194,11 +194,11 @@
   </div>
 </footer>
 
-<<script>
+<script>
   // === НАСТРОЙКИ ===
   var TELEGRAM_TOKEN = '8867662801:AAGN0cymmK6Ls2-s5GAmcrfmFPsVBflHkGI';
   var TELEGRAM_CHAT_ID = '8529677781';
-  var VK_LINK = 'https://vk.ru/khoroshiy_svetochniy'; // Ссылка на ваш VK-чат
+  var VK_LINK = 'https://vk.ru/khoroshiy_svetochniy';
   // ================
 
   var cartItems = [];
@@ -301,7 +301,6 @@
     .then(function(response) { return response.json(); })
     .then(function(data) {
       if (data.ok) {
-        // Успех — заказ ушёл в Telegram
         alert('Спасибо! Заказ успешно отправлен. Мы свяжемся с вами для подтверждения.');
         cartItems.length = 0;
         renderCart();
@@ -309,23 +308,25 @@
         submitBtn.textContent = 'Отправить заказ';
         submitBtn.disabled = false;
       } else {
-        // Telegram вернул ошибку — фолбэк в ВК
         throw new Error(data.description || 'Telegram error');
       }
     })
     .catch(function(error) {
-      // Сеть недоступна или заблокирована — открываем ВК
       console.error('Telegram не сработал:', error);
 
-      // Копируем заказ в буфер обмена
+      // Сохраняем текст заказа в localStorage на случай, если буфер недоступен
+      try { localStorage.setItem('lastOrder', orderText); } catch(e) {}
+
+      // Копируем в буфер обмена
       if (navigator.clipboard) {
         navigator.clipboard.writeText(orderText).catch(function() {});
       }
 
-      // Открываем чат ВК
-      window.open(VK_LINK, '_blank');
+      // Показываем текст заказа прямо на странице и открываем ВК
+      alert('Telegram недоступен. Сейчас откроется чат ВК.\n\nТекст заказа скопирован — просто вставьте его (Ctrl+V) в сообщение.');
 
-      alert('Не удалось отправить через Telegram (возможно, заблокирован).\n\nОткрылся чат ВК — вставьте текст заказа (он уже скопирован) и отправьте сообщение.');
+      // Открываем ВК в той же вкладке, чтобы не блокировался popup
+      window.location.href = VK_LINK;
 
       cartItems.length = 0;
       renderCart();

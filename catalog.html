@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Каталог букетов — Хороший Цветочный</title>
-  <!-- Подключаем стили -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -29,7 +28,6 @@
     <section class="catalog">
       <div class="container">
         <div class="grid">
-          
           <!-- Букет 1 -->
           <article class="card">
             <img src="img/bouquet1.jpg" alt="Букет из розовых роз, белых хризантем и диантусов" loading="lazy">
@@ -84,7 +82,6 @@
               <button type="button" class="btn add-to-cart" data-name="Белые хризантемы" data-price="2750">В корзину</button>
             </div>
           </article>
-
         </div>
       </div>
     </section>
@@ -122,11 +119,16 @@
   </footer>
 
   <script>
-    // Логика корзины и формы
+    // === НАСТРОЙКИ TELEGRAM (ОБЯЗАТЕЛЬНО ИЗМЕНИТЬ) ===
+    const TELEGRAM_TOKEN = '8815592500:AAE616JolYCdJzO74kAt-_TKpr5Wrc_D9vY'; 
+    const TELEGRAM_CHAT_ID = '8529677781';
+    // =================================================
+
     const cartItems = ;
     const cartItemsEl = document.getElementById('cart-items');
     const cartTotalEl = document.getElementById('cart-total');
 
+    // Добавление в корзину
     document.querySelectorAll('.add-to-cart').forEach(btn => {
       btn.addEventListener('click', () => {
         const name = btn.getAttribute('data-name');
@@ -137,6 +139,7 @@
       });
     });
 
+    // Отрисовка корзины
     function renderCart() {
       if (cartItems.length === 0) {
         cartItemsEl.innerHTML = '<p>Корзина пуста</p>';
@@ -165,9 +168,10 @@
       });
     }
 
-    // Обработка отправки формы
-    document.getElementById('order-form').addEventListener('submit', (e) => {
+    // Отправка заказа в Telegram
+    document.getElementById('order-form').addEventListener('submit', async (e) => {
       e.preventDefault();
+      
       const name = document.getElementById('name').value;
       const phone = document.getElementById('phone').value;
       const address = document.getElementById('address').value;
@@ -177,20 +181,49 @@
         return;
       }
 
-      const orderData = {
-        name,
-        phone,
-        address,
-        items: cartItems.map(i => i.name).join(', '),
-        total: cartItems.reduce((sum, i) => sum + i.price, 0)
-      };
+      const totalPrice = cartItems.reduce((sum, i) => sum + i.price, 0);
+      const itemsList = cartItems.map(i => `- ${i.name} (${i.price} ₽)`).join('\n');
 
-      console.log('Новый заказ:', orderData);
-      alert('Спасибо! Заказ отправлен. Мы свяжемся с вами для подтверждения.');
-      
-      // Очистка корзины
-      cartItems.length = 0;
-      renderCart();
+      // Формируем сообщение
+      const message = `
+📦 <b>Новый заказ!</b>
+
+👤 Клиент: \${name}
+📱 Телефон: \${phone}
+📍 Адрес: \${address}
+
+💐 <b>Состав заказа:</b>
+\${itemsList}
+
+💰 <b>Итого: \${totalPrice} ₽</b>
+      `.trim();
+
+      try {
+        const url = `https://api.telegram.org/bot\${TELEGRAM_TOKEN}/sendMessage`;
+        
+        await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message,
+            parse_mode: 'HTML'
+          })
+        });
+
+        alert('Спасибо! Заказ успешно отправлен. Мы свяжемся с вами для подтверждения.');
+        
+        // Очистка корзины и формы
+        cartItems.length = 0;
+        renderCart();
+        document.getElementById('order-form').reset();
+
+      } catch (error) {
+        console.error('Ошибка отправки:', error);
+        alert('Произошла ошибка при отправке заказа. Попробуйте позже или позвоните нам.');
+      }
     });
   </script>
 </body>

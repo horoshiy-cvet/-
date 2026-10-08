@@ -3,86 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Хороший Цветочный — Свежие букеты с доставкой</title>
+  <title>Хороший Цветочный — Главная</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    /* Дополнительные стили только для главной страницы */
-    .hero-main {
-      background: linear-gradient(135deg, #fdfbf7 0%, #eef2f5 100%);
-      padding: 100px 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-main h1 {
-      font-size: 3.5rem;
-      margin-bottom: 20px;
-      color: #333;
-      line-height: 1.1;
-    }
-    .hero-main p {
-      font-size: 1.2rem;
-      color: #666;
-      margin-bottom: 40px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .btn-hero {
-      background: #d4a373;
-      color: #fff;
-      padding: 18px 40px;
-      font-size: 1.1rem;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: inline-block;
-    }
-    .btn-hero:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 20px rgba(212, 163, 115, 0.3);
-      background: #c29365;
-    }
-    .features {
-      padding: 60px 0;
-      background: #fff;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .feature-card {
-      text-align: center;
-      padding: 30px;
-      background: #f9f9f9;
-      border-radius: 12px;
-    }
-    .feature-icon {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-      display: block;
-    }
-    .feature-card h3 { margin-bottom: 10px; }
-    .feature-card p { color: #666; }
-
-    /* Декоративные элементы (опционально) */
-    .decor-circle {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      z-index: 0;
-      opacity: 0.6;
-    }
-    .circle-1 { width: 300px; height: 300px; background: #d4a373; top: -100px; left: -50px; }
-    .circle-2 { width: 200px; height: 200px; background: #fff; bottom: -50px; right: -20px; }
-  </style>
 </head>
 <body>
-
   <header>
     <div class="container header-content">
       <a href="index.html" class="logo">Хороший Цветочный</a>
@@ -94,75 +18,49 @@
   </header>
 
   <main>
-    <!-- Главный экран -->
-    <section class="hero-main">
-      <div class="decor-circle circle-1"></div>
-      <div class="decor-circle circle-2"></div>
+    <section class="hero">
       <div class="container">
-        <h1>Дарите эмоции<br>с нашими букетами</h1>
-        <p>Только свежие цветы, стильная упаковка и бережная доставка. Соберем букет под любой повод и бюджет.</p>
-        <a href="catalog.html" class="btn-hero">Выбрать букет</a>
+        <h1>Свежие букеты каждый день</h1>
+        <p>Нежная классика и яркие миксы — подберем букет для любого повода.</p>
+        <br>
+        <a href="catalog.html" class="btn btn-primary" style="width: auto; padding: 15px 40px;">Перейти в каталог</a>
       </div>
     </section>
 
-    <!-- Преимущества -->
-    <section class="features">
-      <div class="container">
-        <div class="features-grid">
-          <div class="feature-card">
-            <span class="feature-icon">💐</span>
-            <h3>Свежие цветы</h3>
-            <p>Поставки каждый день. Мы не храним цветы дольше 3 дней.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🚚</span>
-            <h3>Быстрая доставка</h3>
-            <p>Доставим букет в течение 2 часов или к точному времени.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🎁</span>
-            <h3>Подарки в комплекте</h1>
-            <p>Открытка и подкормка для цветов — бесплатно к каждому заказу.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Быстрый доступ к каталогу (мини-сетка) -->
     <section class="catalog">
       <div class="container">
-        <h2 style="text-align: center; margin-bottom: 40px;">Хиты продаж</h2>
-        <div class="grid" style="gap: 20px;">
-          <!-- Букет 1 -->
+        <h2 style="margin-bottom: 30px;">Популярные букеты</h2>
+        <div class="grid">
+          <!-- Превью 1 -->
           <article class="card">
             <img src="img/bouquet1.jpg" alt="Нежная классика" loading="lazy">
             <div class="card-body">
               <h3>Нежная классика</h3>
-              <p class="price" style="margin-bottom: 15px;">3 150 ₽</p>
-              <a href="catalog.html" class="btn" style="width: 100%; text-align: center; display: block;">Подробнее</a>
+              <p class="desc">Розы, хризантемы, диантусы — идеальный выбор для мамы или любимой.</p>
+              <p class="price">3 150 ₽</p>
+              <a href="catalog.html" class="btn">Подробнее</a>
             </div>
           </article>
-          <!-- Букет 2 -->
+          <!-- Превью 2 -->
           <article class="card">
             <img src="img/bouquet2.jpg" alt="Солнечный день" loading="lazy">
             <div class="card-body">
               <h3>Солнечный день</h3>
-              <p class="price" style="margin-bottom: 15px;">2 990 ₽</p>
-              <a href="catalog.html" class="btn" style="width: 100%; text-align: center; display: block;">Подробнее</a>
+              <p class="desc">Оранжевые розы и полевые ромашки — заряд энергии и хорошего настроения.</p>
+              <p class="price">2 990 ₽</p>
+              <a href="catalog.html" class="btn">Подробнее</a>
             </div>
           </article>
-          <!-- Букет 5 (Монобукет) -->
+          <!-- Превью 5 -->
           <article class="card">
             <img src="img/bouquet5.jpg" alt="Белые хризантемы" loading="lazy">
             <div class="card-body">
               <h3>Белые хризантемы</h3>
-              <p class="price" style="margin-bottom: 15px;">2 750 ₽</p>
-              <a href="catalog.html" class="btn" style="width: 100%; text-align: center; display: block;">Подробнее</a>
+              <p class="desc">Крупные белые хризантемы и веточки эвкалипта — лаконично и стильно.</p>
+              <p class="price">2 750 ₽</p>
+              <a href="catalog.html" class="btn">Подробнее</a>
             </div>
           </article>
-        </div>
-        <div style="text-align: center; margin-top: 40px;">
-          <a href="catalog.html" class="btn btn-primary" style="width: auto; padding: 15px 40px;">Смотреть весь каталог</a>
         </div>
       </div>
     </section>
@@ -173,6 +71,5 @@
       <p>&copy; 2024 Хороший Цветочный. Все права защищены.</p>
     </div>
   </footer>
-
 </body>
 </html>

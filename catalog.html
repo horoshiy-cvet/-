@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог букетов — Хороший Цветочный</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Дополнительные стили только для страницы каталога */
+    .catalog-page { padding: 60px 0; }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .catalog-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .catalog-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+    .catalog-card img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      display: block;
+    }
+    .catalog-card-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .catalog-card-body h3 {
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+      color: #2c2c2c;
+    }
+    .catalog-card-body .desc {
+      color: #888;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+    .catalog-card-body .price {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #d4a373;
+      margin-bottom: 16px;
+    }
+    .cart-section {
+      background: #fff;
+      padding: 50px 20px;
+      max-width: 700px;
+      margin: 40px auto;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .cart-section h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item-name { font-weight: 500; }
+    .cart-item-price { color: #d4a373; font-weight: 600; }
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #e74c3c;
+      cursor: pointer;
+      font-size: 1.3rem;
+      padding: 0 8px;
+      transition: color 0.2s;
+    }
+    .remove-btn:hover { color: #c0392b; }
+    .cart-total {
+      text-align: right;
+      font-size: 1.3rem;
+      font-weight: 700;
+      padding: 20px 0;
+      color: #2c2c2c;
+    }
+    .order-form {
+      max-width: 500px;
+      margin: 30px auto 0;
+    }
+    .order-form h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #d4a373;
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: #d4a373;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-submit:hover { background: #c29365; }
+    .btn-submit:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .add-cart-btn {
+      width: 100%;
+      padding: 12px;
+      background: #d4a373;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .add-cart-btn:hover { background: #c29365; }
+    .add-cart-btn.added {
+      background: #27ae60;
+    }
+    .catalog-hero {
+      background: #faf8f5;
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .catalog-hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+    .catalog-hero p {
+      color: #888;
+      font-size: 1.1rem;
+    }
+    .empty-cart {
+      text-align: center;
+      color: #aaa;
+      padding: 30px 0;
+    }
+    @media (max-width: 768px) {
+      .catalog-grid {
+        grid-template-columns: 1fr;
+      }
+      .catalog-hero h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header style="background:#fff;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:16px 0;position:sticky;top:0;z-index:100;">
+    <div style="max-width:1200px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;">
+      <a href="index.html" style="font-size:1.5rem;font-weight:700;color:#d4a373;text-decoration:none;">🌸 Хороший Цветочный</a>
+      <nav style="display:flex;gap:24px;">
+        <a href="index.html" style="color:#666;text-decoration:none;font-weight:500;">Главная</a>
+        <a href="catalog.html" style="color:#d4a373;text-decoration:none;font-weight:500;">Каталог</a>
+        <a href="https://vk.ru/khoroshiy_svetochniy" target="_blank" style="color:#666;text-decoration:none;font-weight:500;">ВКонтакте</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="catalog-hero">
+    <h1>Наши букеты</h1>
+    <p>Свежие цветы, стильная упаковка и быстрая доставка по Москве</p>
+  </section>
+
+  <!-- КАТАЛОГ -->
+  <section class="catalog-page">
+    <div class="catalog-grid">
+
+      <!-- Букет 1 -->
+      <article class="catalog-card">
+        <img src="img/bouquet1.jpg" alt="Букет из розовых роз, белых хризантем и диантусов" loading="lazy">
+        <div class="catalog-card-body">
+          <h3>Нежная классика</h3>
+          <p class="desc">Розы, хризантемы, диантусы — идеальный выбор для мамы или любимой.</p>
+          <p class="price">3 150 ₽</p>
+          <button type="button" class="add-cart-btn" data-name="Нежная классика" data-price="3150">В корзину</button>
+        </div>
+      </article>
+
+      <!-- Букет 2 -->
+      <article class="catalog-card">
+        <img src="img/bouquet2.jpg" alt="Яркий букет из оранжевых кустовых роз и ромашек" loading="lazy">
+        <div class="catalog-card-body">
+          <h3>Солнечный день</h3>
+          <p class="desc">Оранжевые розы и полевые ромашки — заряд энергии и хорошего настроения.</p>
+          <p class="price">2 990 ₽</p>
+          <button type="button" class="add-cart-btn" data-name="Солнечный день" data-price="2990">В корзину</button>
+        </div>
+      </article>
+
+      <!-- Букет 3 -->
+      <article class="catalog-card">
+        <img src="img/bouquet3.jpg" alt="Пастельный букет из гербер, хризантем и кустовых роз" loading="lazy">
+        <div class="catalog-card-body">
+          <h3>Пастельный микс</h3>
+          <p class="desc">Герберы, хризантемы, кустовые розы — мягкие оттенки для трогательных моментов.</p>
+          <p class="price">3 450 ₽</p>
+          <button type="button" class="add-cart-btn" data-name="Пастельный микс" data-price="3450">В корзину</button>
+        </div>
+      </article>
+
+      <!-- Букет 4 -->
+      <article class="catalog-card">
+        <img src="img/bouquet4.jpg" alt="Яркий букет из гербер, кустовых роз и зелёных хризантем" loading="lazy">
+        <div class="catalog-card-body">
+          <h3>Яркий микс</h3>
+          <p class="desc">Герберы, кустовые розы, зелёные хризантемы — сочный и запоминающийся букет.</p>
+          <p class="price">3 800 ₽</p>
+          <button type="button" class="add-cart-btn" data-name="Яркий микс" data-price="3800">В корзину</button>
+        </div>
+      </article>
+
+      <!-- Букет 5 -->
+      <article class="catalog-card">
+        <img src="img/bouquet5.jpg" alt="Букет из красных роз и альстромерии" loading="lazy">
+        <div class="catalog-card-body">
+          <h3>Красные розы и альстромерия</h3>
+          <p class="desc">Классическое сочетание алых роз и нежной альстромерии — страсть и элегантность.</p>
+          <p class="price">3 150 ₽</p>
+          <button type="button" class="add-cart-btn" data-name="Красные розы и альстромерия" data-price="3150">В корзину</button>
+        </div>
+      </article>
+
+      <!-- Букет 6 -->
+      <article class="catalog-card">
+        <img src="img/bouquet6.jpg" alt="Композиция в сумочке Сочный акцент" loading="lazy">
+        <div class="catalog-card-body">
+          <h3>Композиция в сумочке «Сочный акцент»</h3>
+          <p class="desc">Стильная композиция в сумочке — яркий подарок, который удивит и порадует.</p>
+          <p class="price">1 990 ₽</p>
+          <button type="button" class="add-cart-btn" data-name="Композиция в сумочке «Сочный акцент»" data-price="1990">В корзину</button>
+        </div>
+      </article>
+
+      <!-- Букет 7 -->
+      <article class="catalog-card">
+        <img src="img/bouquet7.jpg" alt="Монобукет из кустовых хризантем" loading="lazy">
+        <div class="catalog-card-body">
+          <h3>Монобукет из кустовых хризантем</h3>
+          <p class="desc">Пышные кустовые хризантемы одного сорта — лаконично, стильно, долго стоит.</p>
+          <p class="price">от 2 850 ₽</p>
+          <button type="button" class="add-cart-btn" data-name="Монобукет из кустовых хризантем" data-price="2850">В корзину</button>
+        </div>
+      </article>
+
+      <!-- Букет 8 -->
+      <article class="catalog-card">
+        <img src="img/bouquet8.jpg" alt="Букет ярких кустовых роз" loading="lazy">
+        <div class="catalog-card-body">
+          <h3>Букет ярких кустовых роз</h3>
+          <p class="desc">Яркие кустовые розы — обилие цветов на одной веточке, пышность и аромат.</p>
+          <p class="price">от 2 250 ₽</p>
+          <button type="button" class="add-cart-btn" data-name="Букет ярких кустовых роз" data-price="2250">В корзину</button>
+        </div>
+      </article>
+
+      <!-- Букет 9 -->
+      <article class="catalog-card">
+        <img src="img/bouquet9.jpg" alt="Свежие алые розы" loading="lazy">
+        <div class="catalog-card-body">
+          <h3>Свежие алые розы</h3>
+          <p class="desc">Классические алые розы — беспроигрышный вариант для любого повода.</p>
+          <p class="price">4 600 ₽</p>
+          <button type="button" class="add-cart-btn" data-name="Свежие алые розы" data-price="4600">В корзину</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- КОРЗИНА И ФОРМА -->
+  <section class="cart-section">
+    <h2>🛒 Ваша корзина</h2>
+    <div id="cart-items">
+      <p class="empty-cart">Корзина пуста — добавьте букеты из каталога выше</p>
+    </div>
+    <div id="cart-total"></div>
+
+    <form id="order-form" class="order-form">
+      <h3>Оформить заказ</h3>
+      <div class="form-group">
+        <label for="name">Ваше имя</label>
+        <input type="text" id="name" name="name" placeholder="Анна" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Телефон</label>
+        <input type="tel" id="phone" name="phone" placeholder="+7 (999) 000-00-00" required>
+      </div>
+      <div class="form-group">
+        <label for="address">Адрес доставки</label>
+        <input type="text" id="address" name="address" placeholder="ул. Цветочная, д. 1, кв. 10" required>
+      </div>
+      <div class="form-group">
+        <label for="comment">Комментарий (необязательно)</label>
+        <textarea id="comment" name="comment" placeholder="Пожелания к букету, время доставки..."></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Отправить заказ</button>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:#2c2c2c;color:#fff;text-align:center;padding:30px 20px;">
+    <p>© 2026 Хороший Цветочный. Все права защищены.</p>
+  </footer>
+
+  <script>
+    // === НАСТРОЙКИ TELEGRAM ===
+    // Замените значения ниже на свои:
+    // 1. TELEGRAM_TOKEN — токен бота от @BotFather
+    // 2. TELEGRAM_CHAT_ID — ваш ID от @userinfobot
+    const TELEGRAM_TOKEN = 'ВАШ_ТОКЕН';
+    const TELEGRAM_CHAT_ID = 'ВАШ_CHAT_ID';
+    // ==========================
+
+    let cartItems = [];
+    const cartItemsEl = document.getElementById('cart-items');
+    const cartTotalEl = document.getElementById('cart-total');
+
+    // Добавление в корзину
+    document.querySelectorAll('.add-cart-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const name = btn.getAttribute('data-name');
+        const price = parseInt(btn.getAttribute('data-price'));
+        cartItems.push({ name, price });
+        renderCart();
+        // Визуальная обратная связь
+        btn.classList.add('added');
+        btn.textContent = '✓ Добавлен!';
+        setTimeout(() => {
+          btn.classList.remove('added');
+          btn.textContent = 'В корзину';
+        }, 1500);
+      });
+    });
+
+    // Отрисовка корзины
+    function renderCart() {
+      if (cartItems.length === 0) {
+        cartItemsEl.innerHTML = '<p class="empty-cart">Корзина пуста — добавьте букеты из каталога выше</p>';
+        cartTotalEl.innerHTML = '';
+        return;
+      }
+
+      cartItemsEl.innerHTML = cartItems.map((item, index) => 
+        '<div class="cart-item">' +
+          '<span class="cart-item-name">' + item.name + '</span>' +
+          '<span class="cart-item-price">' + item.price + ' ₽</span>' +
+          '<button class="remove-btn" data-index="' + index + '" title="Удалить">×</button>' +
+        '</div>'
+      ).join('');
+
+      const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+      cartTotalEl.innerHTML = '<div class="cart-total">Итого: ' + total + ' ₽</div>';
+
+      // Кнопки удаления
+      document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const index = parseInt(btn.getAttribute('data-index'));
+          cartItems.splice(index, 1);
+          renderCart();
+        });
+      });
+    }
+
+    // Отправка заказа в Telegram
+    document.getElementById('order-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+      const comment = document.getElementById('comment').value;
+
+      if (cartItems.length === 0) {
+        alert('Сначала добавьте букеты в корзину!');
+        return;
+      }
+
+      const totalPrice = cartItems.reduce((sum, i) => sum + i.price, 0);
+      const itemsList = cartItems.map(i => '• ' + i.name + ' — ' + i.price + ' ₽').join('\n');
+
+      let message = '📦 *Новый заказ!*\n\n';
+      message += '👤 Клиент: ' + name + '\n';
+      message += '📱 Телефон: ' + phone + '\n';
+      message += '📍 Адрес: ' + address + '\n';
+      message += '\n💐 *Состав заказа:*\n' + itemsList + '\n';
+      message += '\n💰 *Итого: ' + totalPrice + ' ₽*';
+      if (comment) {
+        message += '\n\n📝 Комментарий: ' + comment;
+      }
+
+      // Отправляем через URLSearchParams (без CORS проблем)
+      const params = new URLSearchParams();
+      params.append('chat_id', TELEGRAM_CHAT_ID);
+      params.append('text', message);
+      params.append('parse_mode', 'Markdown');
+
+      try {
+        const response = await fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: params
+        });
+
+        const data = await response.json();
+
+        if (data.ok) {
+          alert('Спасибо! Заказ отправлен. Мы свяжемся с вами для подтверждения.');
+          cartItems = [];
+          renderCart();
+          document.getElementById('order-form').reset();
+        } else {
+          console.error('Telegram API error:', data);
+          alert('Ошибка отправки: ' + (data.description || 'проверьте токен и Chat ID'));
+        }
+      } catch (error) {
+        console.error('Network error:', error);
+        alert('Не удалось отправить заказ. Проверьте интернет-соединение.');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -194,149 +194,146 @@
   </div>
 </footer>
 
-<script>
-  // === НАСТРОЙКИ TELEGRAM ===
-  var TELEGRAM_TOKEN = '8867662801:AAGN0cymmK6Ls2-s5GAmcrfmFPsVBflHkGI';
-  var TELEGRAM_CHAT_ID = '8529677781';
-  // ==========================
+<<script>
+  // === НАСТРОЙКИ ===
+  var TELEGRAM_TOKEN = 'ВСТАВЬТЕ_ТОКЕН';
+  var TELEGRAM_CHAT_ID = 'ВСТАВЬТЕ_CHAT_ID';
+  var VK_LINK = 'https://vk.me/khoroshiy_svetochniy'; // Ссылка на ваш VK-чат
+  // ================
 
   var cartItems = [];
   var cartItemsEl = document.getElementById('cart-items');
   var cartTotalEl = document.getElementById('cart-total');
 
-  // При загрузке страницы читаем корзину из localStorage
-  // (товары, добавленные на главной странице)
-  function loadCart() {
-    try {
-      cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
-    } catch(e) {
-      cartItems = [];
+  // Загрузка корзины из localStorage (с главной страницы)
+  try {
+    var saved = localStorage.getItem('cartItems');
+    if (saved) {
+      cartItems = JSON.parse(saved);
+      localStorage.removeItem('cartItems');
     }
-  }
+  } catch (e) {}
 
-  function saveCart() {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }
-
-  function renderCart() {
-    if (cartItems.length === 0) {
-      cartItemsEl.innerHTML = '<p class="cart-empty">Корзина пуста — добавьте букет из каталога выше 👆</p>';
-      cartTotalEl.innerHTML = '';
-      return;
-    }
-
-    var html = '';
-    for (var i = 0; i < cartItems.length; i++) {
-      html += '<div class="cart-item">' +
-        '<span>' + cartItems[i].name + '</span>' +
-        '<span class="item-price">' + cartItems[i].price + ' ₽</span>' +
-        '<button class="remove-btn" data-index="' + i + '">×</button>' +
-        '</div>';
-    }
-    cartItemsEl.innerHTML = html;
-
-    var total = 0;
-    for (var i = 0; i < cartItems.length; i++) {
-      total += cartItems[i].price;
-    }
-    cartTotalEl.innerHTML = 'Итого: ' + total + ' ₽';
-
-    // Кнопки удаления
-    document.querySelectorAll('.remove-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var idx = parseInt(btn.getAttribute('data-index'));
-        cartItems.splice(idx, 1);
-        saveCart();
-        renderCart();
-      });
-    });
-  }
-
-  // Кнопки "В корзину" в каталоге
+  // Добавление в корзину
   document.querySelectorAll('.add-to-cart').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var name = btn.getAttribute('data-name');
       var price = parseInt(btn.getAttribute('data-price'));
       cartItems.push({ name: name, price: price });
-      saveCart();
       renderCart();
-
-      // Визуальная обратная связь
-      var originalText = btn.textContent;
       btn.textContent = '✓ Добавлено';
-      btn.style.background = '#4caf50';
+      btn.style.background = '#4CAF50';
       setTimeout(function() {
-        btn.textContent = originalText;
+        btn.textContent = 'В корзину';
         btn.style.background = '';
-      }, 1200);
-
-      // Прокрутка к корзине
-      document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+      }, 1500);
     });
   });
 
-  // Отправка заказа в Telegram
+  function renderCart() {
+    if (cartItems.length === 0) {
+      cartItemsEl.innerHTML = '<p>Корзина пуста</p>';
+      cartTotalEl.innerHTML = '';
+      return;
+    }
+    cartItemsEl.innerHTML = cartItems.map(function(item, index) {
+      return '<div class="cart-item">' +
+        '<span>' + item.name + '</span>' +
+        '<span>' + item.price + ' ₽</span>' +
+        '<button class="remove-btn" data-index="' + index + '">×</button>' +
+        '</div>';
+    }).join('');
+    var total = cartItems.reduce(function(sum, item) { return sum + item.price; }, 0);
+    cartTotalEl.innerHTML = '<strong>Итого: ' + total + ' ₽</strong>';
+    document.querySelectorAll('.remove-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var index = parseInt(btn.getAttribute('data-index'));
+        cartItems.splice(index, 1);
+        renderCart();
+      });
+    });
+  }
+  renderCart();
+
+  // Формирование текста заказа
+  function buildOrderText(name, phone, address, wishes) {
+    var totalPrice = cartItems.reduce(function(sum, i) { return sum + i.price; }, 0);
+    var itemsList = cartItems.map(function(i) { return '- ' + i.name + ' (' + i.price + ' ₽)'; }).join('\n');
+    var text = 'Новый заказ!\n\n' +
+      'Клиент: ' + name + '\n' +
+      'Телефон: ' + phone + '\n' +
+      'Адрес: ' + address + '\n';
+    if (wishes) text += 'Пожелания: ' + wishes + '\n';
+    text += '\nСостав заказа:\n' + itemsList + '\n\nИтого: ' + totalPrice + ' ₽';
+    return text;
+  }
+
+  // Отправка заказа
   document.getElementById('order-form').addEventListener('submit', function(e) {
     e.preventDefault();
-
     var name = document.getElementById('name').value;
     var phone = document.getElementById('phone').value;
     var address = document.getElementById('address').value;
-    var comment = document.getElementById('comment').value;
+    var wishesEl = document.getElementById('wishes');
+    var wishes = wishesEl ? wishesEl.value : '';
 
     if (cartItems.length === 0) {
-      alert('Сначала добавьте букет в корзину!');
+      alert('Сначала добавьте товары в корзину!');
       return;
     }
 
-    var total = 0;
-    var itemsList = '';
-    for (var i = 0; i < cartItems.length; i++) {
-      total += cartItems[i].price;
-      itemsList += '• ' + cartItems[i].name + ' — ' + cartItems[i].price + ' ₽\n';
-    }
+    var orderText = buildOrderText(name, phone, address, wishes);
+    var submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.textContent = 'Отправка...';
+    submitBtn.disabled = true;
 
-    var message = '📦 Новый заказ!\n\n' +
-      '👤 Клиент: ' + name + '\n' +
-      '📱 Телефон: ' + phone + '\n' +
-      '📍 Адрес: ' + address + '\n';
-    if (comment) {
-      message += '💬 Пожелания: ' + comment + '\n';
-    }
-    message += '\n💐 Состав заказа:\n' + itemsList + '\n💰 Итого: ' + total + ' ₽';
-
-    // Отправка через URLSearchParams (без CORS-блокировки)
+    // Пытаемся отправить в Telegram
     var url = 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage';
     var params = new URLSearchParams();
     params.append('chat_id', TELEGRAM_CHAT_ID);
-    params.append('text', message);
+    params.append('text', orderText);
 
     fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params.toString()
     })
-    .then(function(resp) { return resp.json(); })
+    .then(function(response) { return response.json(); })
     .then(function(data) {
       if (data.ok) {
-        alert('Спасибо! Заказ отправлен. Мы свяжемся с вами для подтверждения.');
-        cartItems = [];
-        saveCart();
+        // Успех — заказ ушёл в Telegram
+        alert('Спасибо! Заказ успешно отправлен. Мы свяжемся с вами для подтверждения.');
+        cartItems.length = 0;
         renderCart();
         document.getElementById('order-form').reset();
+        submitBtn.textContent = 'Отправить заказ';
+        submitBtn.disabled = false;
       } else {
-        alert('Ошибка отправки: ' + (data.description || 'проверьте токен и Chat ID'));
+        // Telegram вернул ошибку — фолбэк в ВК
+        throw new Error(data.description || 'Telegram error');
       }
     })
     .catch(function(error) {
-      alert('Не удалось отправить заказ. Проверьте интернет-соединение.');
-      console.error('Telegram error:', error);
+      // Сеть недоступна или заблокирована — открываем ВК
+      console.error('Telegram не сработал:', error);
+
+      // Копируем заказ в буфер обмена
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(orderText).catch(function() {});
+      }
+
+      // Открываем чат ВК
+      window.open(VK_LINK, '_blank');
+
+      alert('Не удалось отправить через Telegram (возможно, заблокирован).\n\nОткрылся чат ВК — вставьте текст заказа (он уже скопирован) и отправьте сообщение.');
+
+      cartItems.length = 0;
+      renderCart();
+      document.getElementById('order-form').reset();
+      submitBtn.textContent = 'Отправить заказ';
+      submitBtn.disabled = false;
     });
   });
-
-  // Инициализация
-  loadCart();
-  renderCart();
 </script>
 
 </body>

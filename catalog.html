@@ -196,6 +196,8 @@
 
 <script>
   // === НАСТРОЙКИ ===
+  var MAX_TOKEN = 'f9LHodD0cOLBVB4ni4668p2a9oGLTv-hr0MRz9ZT9WrBIH5nDA1HUNHHmHSGIYdOy2BtW1IDqTRl_toLdwEQ';
+  var MAX_CHAT_ID = '231485035';
   var TELEGRAM_TOKEN = '8867662801:AAGN0cymmK6Ls2-s5GAmcrfmFPsVBflHkGI';
   var TELEGRAM_CHAT_ID = '8529677781';
   var VK_LINK = 'https://vk.ru/khoroshiy_svetochniy';
@@ -205,7 +207,6 @@
   var cartItemsEl = document.getElementById('cart-items');
   var cartTotalEl = document.getElementById('cart-total');
 
-  // Загрузка корзины из localStorage (с главной страницы)
   try {
     var saved = localStorage.getItem('cartItems');
     if (saved) {
@@ -214,7 +215,6 @@
     }
   } catch (e) {}
 
-  // Добавление в корзину
   document.querySelectorAll('.add-to-cart').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var name = btn.getAttribute('data-name');
@@ -255,7 +255,6 @@
   }
   renderCart();
 
-  // Формирование текста заказа
   function buildOrderText(name, phone, address, wishes) {
     var totalPrice = cartItems.reduce(function(sum, i) { return sum + i.price; }, 0);
     var itemsList = cartItems.map(function(i) { return '- ' + i.name + ' (' + i.price + ' ₽)'; }).join('\n');
@@ -268,7 +267,101 @@
     return text;
   }
 
-  // Отправка заказа
+  // === ОТПРАВКА В МАКС ===
+  function sendToMax(orderText) {
+    var url = 'https://platform-api2.max.ru/messages?chat_id=' + MAX_CHAT_ID;
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': MAX_TOKEN,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text: orderText })
+    })
+    .then(function(resp) { return resp.json(); })
+    .then(function(data) {
+      if (data && (data.mid || data.message)) {
+        return true;
+      }
+      throw new Error(data.message || data.description || 'MAX error');
+      });
+  }
+
+  // === ОТПРАВКА В TELEGRAM (запасной канал) ===
+  function sendToTelegram(orderText) {
+    var url = 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage';
+    var params = new URLSearchParams();
+    params.append('chat_id', TELEGRAM_CHAT_ID);
+    params.append('text', orderText);
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    })
+    .then(function(resp) { return resp.json(); })
+    .then(function(data) {
+      if (data.ok) return true;
+      throw new Error(data.description || 'Telegram error');
+    });
+  }
+
+  // === ФОЛБЭК В ВК ===
+  function showVkFallback(orderText) {
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    var box = document.createElement('div');
+    box.style.cssText = 'background:#fff;border-radius:16px;padding:30px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
+    box.innerHTML =
+      '<h2 style="margin:0 0 10px;color:#333;font-size:1.4rem;">Почти готово!</h2>' +
+      '<p style="color:#666;margin-bottom:20px;line-height:1.5;">Автоотправка недоступна. Скопируйте текст заказа и отправьте его нам в ВК.</p>' +
+      '<textarea id="vk-order-text" readonly style="width:100%;height:180px;padding:15px;border:2px solid #e0d5c5;border-radius:10px;font-family:inherit;font-size:0.95rem;resize:none;background:#faf8f5;color:#333;outline:none;">' + orderText.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</textarea>' +
+      '<div style="display:flex;flex-direction:column;gap:12px;margin-top:20px;">' +
+        '<button id="vk-copy-btn" style="background:#d4a373;color:#fff;border:none;padding:16px;border-radius:10px;font-size:1.05rem;cursor:pointer;font-weight:600;">📋 Скопировать текст заказа</button>' +
+        '<button id="vk-open-btn" style="background:#4a76a8;color:#fff;border:none;padding:16px;border-radius:10px;font-size:1.05rem;cursor:pointer;font-weight:600;display:none;">Открыть чат ВК →</button>' +
+        '<button id="vk-cancel-btn" style="background:none;border:none;color:#999;cursor:pointer;padding:8px;font-size:0.9rem;">Отмена</button>' +
+      '</div>';
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    var textarea = box.querySelector('#vk-order-text');
+    var copyBtn = box.querySelector('#vk-copy-btn');
+    var openBtn = box.querySelector('#vk-open-btn');
+    var cancelBtn = box.querySelector('#vk-cancel-btn');
+
+    setTimeout(function() { textarea.select(); }, 100);
+
+    copyBtn.addEventListener('click', function() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(orderText).then(function() {
+          copyBtn.textContent = '✓ Скопировано!';
+          copyBtn.style.background = '#4CAF50';
+          openBtn.style.display = 'block';
+        }).catch(function() {
+          textarea.select();
+          document.execCommand('copy');
+          copyBtn.textContent = '✓ Скопировано!';
+          copyBtn.style.background = '#4CAF50';
+          openBtn.style.display = 'block';
+        });
+      } else {
+        textarea.select();
+        document.execCommand('copy');
+        copyBtn.textContent = '✓ Скопировано!';
+        copyBtn.style.background = '#4CAF50';
+        openBtn.style.display = 'block';
+      }
+    });
+
+    openBtn.addEventListener('click', function() {
+      window.open(VK_LINK, '_blank');
+    });
+
+    cancelBtn.addEventListener('click', function() {
+      document.body.removeChild(overlay);
+    });
+  }
+
+  // === ОТПРАВКА ЗАКАЗА ===
   document.getElementById('order-form').addEventListener('submit', function(e) {
     e.preventDefault();
     var name = document.getElementById('name').value;
@@ -287,53 +380,35 @@
     submitBtn.textContent = 'Отправка...';
     submitBtn.disabled = true;
 
-    // Пытаемся отправить в Telegram
-    var url = 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage';
-    var params = new URLSearchParams();
-    params.append('chat_id', TELEGRAM_CHAT_ID);
-    params.append('text', orderText);
-
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params.toString()
-    })
-    .then(function(response) { return response.json(); })
-    .then(function(data) {
-      if (data.ok) {
+    // 1) Пытаемся МАКС
+    sendToMax(orderText)
+      .then(function() {
         alert('Спасибо! Заказ успешно отправлен. Мы свяжемся с вами для подтверждения.');
         cartItems.length = 0;
         renderCart();
         document.getElementById('order-form').reset();
         submitBtn.textContent = 'Отправить заказ';
         submitBtn.disabled = false;
-      } else {
-        throw new Error(data.description || 'Telegram error');
-      }
-    })
-    .catch(function(error) {
-      console.error('Telegram не сработал:', error);
-
-      // Сохраняем текст заказа в localStorage на случай, если буфер недоступен
-      try { localStorage.setItem('lastOrder', orderText); } catch(e) {}
-
-      // Копируем в буфер обмена
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(orderText).catch(function() {});
-      }
-
-      // Показываем текст заказа прямо на странице и открываем ВК
-      alert('Telegram недоступен. Сейчас откроется чат ВК.\n\nТекст заказа скопирован — просто вставьте его (Ctrl+V) в сообщение.');
-
-      // Открываем ВК в той же вкладке, чтобы не блокировался popup
-      window.location.href = VK_LINK;
-
-      cartItems.length = 0;
-      renderCart();
-      document.getElementById('order-form').reset();
-      submitBtn.textContent = 'Отправить заказ';
-      submitBtn.disabled = false;
-    });
+      })
+      .catch(function(maxError) {
+        console.error('МАКС не сработал:', maxError);
+        // 2) Если МАКС не вышел — пробуем Telegram
+        return sendToTelegram(orderText).then(function() {
+          alert('Спасибо! Заказ успешно отправлен. Мы свяжемся с вами для подтверждения.');
+          cartItems.length = 0;
+          renderCart();
+          document.getElementById('order-form').reset();
+          submitBtn.textContent = 'Отправить заказ';
+          submitBtn.disabled = false;
+        });
+      })
+      .catch(function(tgError) {
+        console.error('Telegram тоже не сработал:', tgError);
+        // 3) Оба не сработали — фолбэк ВК
+        submitBtn.textContent = 'Отправить заказ';
+        submitBtn.disabled = false;
+        showVkFallback(orderText);
+      });
   });
 </script>
 
